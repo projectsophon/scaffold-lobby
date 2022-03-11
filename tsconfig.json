@@ -1,0 +1,6 @@
+{
+  "extends": "@projectsophon/tsconfig",
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true
+  }
+}

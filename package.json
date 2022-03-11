@@ -1,0 +1,40 @@
+{
+  "name": "scaffold-lobby",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Create more advanced Dark Forest Lobbies!",
+  "author": "Blaine Bublitz <blaine.bublitz@gmail.com> (https://github.com/phated)",
+  "repository": "projectsophon/scaffold-lobby",
+  "license": "GPL-3.0",
+  "engines": {
+    "node": ">=14"
+  },
+  "scripts": {
+    "hardhat:dev": "hardhat --network localhost",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "@darkforest_eth/contracts": "^6.7.9",
+    "@darkforest_eth/hashing": "^6.7.9",
+    "@darkforest_eth/snarks": "^6.7.9",
+    "snarkjs": "^0.4.15"
+  },
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.2",
+    "@projectsophon/eslint-config": "0.0.2",
+    "@projectsophon/prettier-config": "0.0.0",
+    "@projectsophon/tsconfig": "0.0.0",
+    "@types/node": "^14.14.22",
+    "eslint": "^7.25.0",
+    "ethers": "^5.5.1",
+    "hardhat": "^2.9.1",
+    "prettier": "^2.5.1",
+    "ts-node": "^8.1.0",
+    "typescript": "4.2.x"
+  },
+  "prettier": "@projectsophon/prettier-config",
+  "eslintConfig": {
+    "extends": "@projectsophon/eslint-config"
+  }
+}
