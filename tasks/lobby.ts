@@ -14,6 +14,8 @@ import { getSelectors, FacetCutAction } from "../utils/diamond";
 task("lobby:create", "create a lobby from the command line").setAction(createLobby);
 
 async function createLobby({}, hre: HardhatRuntimeEnvironment): Promise<void> {
+  const isDev = hre.network.name === "localhost" || hre.network.name === "hardhat";
+
   // need to force a compile for tasks
   await hre.run("compile");
 
@@ -53,19 +55,19 @@ async function createLobby({}, hre: HardhatRuntimeEnvironment): Promise<void> {
   console.log("Completed diamond cut");
 
   const race = await hre.ethers.getContractAt("RaceToCenter", lobbyAddress);
-  console.log(await race.claimPlanetCooldown());
+  const claimCooldown = await race.claimPlanetCooldown();
+  console.log("claim cooldown", claimCooldown.toNumber());
+
+  const baseURI = isDev ? "http://localhost:8081" : "https://zkga.me";
+  console.log(`Lobby created. Play at ${baseURI}/play/${lobbyAddress}`);
 }
 
 async function deployLobbyWithDiamond(initializers: unknown, hre: HardhatRuntimeEnvironment) {
-  const isDev = hre.network.name === "localhost" || hre.network.name === "hardhat";
-
   // Were only using one account, getSigners()[0], the deployer. Becomes the ProxyAdmin
   const [deployer] = await hre.ethers.getSigners();
 
   // TODO: The deployer balance should be checked for production.
   // Need to investigate how much this actually costs.
-
-  const baseURI = isDev ? "http://localhost:8081" : "https://zkga.me";
 
   const contract = await hre.ethers.getContractAt(DarkForestABI, CONTRACT_ADDRESS);
 
@@ -77,10 +79,9 @@ async function deployLobbyWithDiamond(initializers: unknown, hre: HardhatRuntime
   const initFunctionCall = initInterface.encodeFunctionData("init", [whitelistEnabled, artifactBaseURI, initializers]);
 
   function waitForCreated(): Promise<string> {
-    return new Promise(async (resolve) => {
-      contract.on("LobbyCreated", async (ownerAddress, lobbyAddress) => {
+    return new Promise((resolve) => {
+      contract.on("LobbyCreated", (ownerAddress, lobbyAddress) => {
         if (deployer.address === ownerAddress) {
-          console.log(`Lobby created. Play at ${baseURI}/play/${lobbyAddress}`);
           resolve(lobbyAddress);
         }
       });
